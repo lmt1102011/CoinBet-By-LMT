@@ -336,7 +336,48 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
   </script>
   <script>
     try {
-      <script src="version.js"></script>
+      (function () {
+    const GAME_VERSION = "1.0.0";
+
+    async function checkUpdate() {
+        try {
+            const response = await fetch(
+                "./version.json?t=" + Date.now(),
+                {
+                    cache: "no-store"
+                }
+            );
+
+            if (!response.ok) {
+                console.log("Không tìm thấy version.json");
+                return;
+            }
+
+            const data = await response.json();
+
+            if (data.version !== GAME_VERSION) {
+                const update = confirm(
+                    "🔄 Có bản cập nhật mới!\n\n" +
+                    "Phiên bản hiện tại: " + GAME_VERSION + "\n" +
+                    "Phiên bản mới: " + data.version + "\n\n" +
+                    (data.message || "") +
+                    "\n\nNhấn OK để cập nhật."
+                );
+
+                if (update) {
+                    window.location.reload(true);
+                }
+            }
+        } catch (err) {
+            console.error("Lỗi kiểm tra cập nhật:", err);
+        }
+    }
+
+    window.addEventListener("load", function () {
+        checkUpdate();
+        setInterval(checkUpdate, 30000);
+    });
+})();
     } catch (e) {
       handleError(e);
     }
