@@ -1,4 +1,4 @@
-const GAME_VERSION = "1.2.0";
+const GAME_VERSION = "1.2.1";
 
 async function checkForUpdates() {
 try {
